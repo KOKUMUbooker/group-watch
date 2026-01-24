@@ -1,4 +1,11 @@
-using MovieManager.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;                    // For LINQ Select
+using System.Threading.Tasks;         // For Task, async/await
+using Microsoft.EntityFrameworkCore;  // For AddAsync, AsNoTracking, ToListAsync, FirstOrDefaultAsync, FindAsync
+using Microsoft.Extensions.Logging;   // For ILogger<T>
+using MovieManager.Models;            // For Movie, MovieDbContext
+using MovieManager.DTOs;              // For MovieDto, CreateMovieDto, UpdateMovieDto
 
 namespace MovieManager.Services;
 

@@ -1,3 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;                    // For LINQ Select
+using System.Threading.Tasks;         // For Task, async/await
+using MovieManager.DTOs;              // For MovieDto, CreateMovieDto, UpdateMovieDto
+
 namespace MovieManager.Services;
 
 public interface IMovieService
