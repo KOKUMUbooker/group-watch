@@ -1,11 +1,12 @@
 using MovieManager.Models;
+using MovieManager.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace MovieManager;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,9 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        // SEED DATABASE
+        await app.SeedDatabaseAsync();
 
         app.UseHttpsRedirection();
 
