@@ -6,7 +6,7 @@
 	import SortAsc from '@lucide/svelte/icons/arrow-up-1-0';
 	import type { SortBy } from '../../../../types';
 	import type { SortOrder } from '../../../../types';
-	interface SortByFiltersProps {
+	export interface SortByFiltersProps {
 		sortBy: SortBy;
 		sortOrder: SortOrder;
 		toggleSortOrder: () => void;

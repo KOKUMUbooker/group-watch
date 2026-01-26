@@ -2,7 +2,7 @@
 	import MovieGrid from '$lib/components/home/MovieGrid.svelte';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Button } from '$lib/components/ui/button';
-	import { Card, CardContent, CardHeader, CardTitle } from '$lib/components/ui/card';
+	import { Card, CardHeader, CardTitle } from '$lib/components/ui/card';
 	import { Input } from '$lib/components/ui/input';
 	import { Select, SelectContent, SelectItem, SelectTrigger } from '$lib/components/ui/select';
 	import {
@@ -13,31 +13,18 @@
 		SheetTitle,
 		SheetTrigger
 	} from '$lib/components/ui/sheet';
-	import { Slider } from '$lib/components/ui/slider';
-	import { Tabs, TabsList, TabsTrigger } from '$lib/components/ui/tabs';
 	import ActiveFilters from '@/components/movies/active-filters.svelte';
+	import FiltersContent from '@/components/movies/filters/filters-content.svelte';
 	import HeroHeader from '@/components/movies/hero-header.svelte';
-	import Label from '@/components/ui/label/label.svelte';
-	import SortDesc from '@lucide/svelte/icons/arrow-down-1-0';
-	import SortAsc from '@lucide/svelte/icons/arrow-up-1-0';
-	import Calendar from '@lucide/svelte/icons/calendar';
-	import Clock from '@lucide/svelte/icons/clock';
 	import Grid2x2 from '@lucide/svelte/icons/grid-2x2';
 	import List from '@lucide/svelte/icons/list';
-	import RefreshCw from '@lucide/svelte/icons/refresh-cw';
 	import Search from '@lucide/svelte/icons/search';
 	import Filter from '@lucide/svelte/icons/sliders-horizontal';
-	import Star from '@lucide/svelte/icons/star';
 	import X from '@lucide/svelte/icons/x';
 	import { onMount } from 'svelte';
 	import { dummyMovies } from '../../data/movies';
-	import { ALL_GENRES, type Genre, type Movie } from '../../types';
-	import SearchFilter from '@/components/movies/filters/search-filter.svelte';
-	import SortByFilter from '@/components/movies/filters/sort-by-filter.svelte';
-	import GenreFilter from '@/components/movies/filters/genre-filter.svelte';
-	import YearRangeFilter from '@/components/movies/filters/year-range-filter.svelte';
-	import RatingRangeFilter from '@/components/movies/filters/rating-range-filter.svelte';
-	import DurationFilter from '@/components/movies/filters/duration-filter.svelte';
+	import { type Genre, type Movie } from '../../types';
+	import FiltersHeader from '@/components/movies/filters/filters-header.svelte';
 
 	// State
 	let movies: Movie[] = dummyMovies;
@@ -117,51 +104,23 @@
 			<!-- Left Sidebar - Filters (Desktop) -->
 			<div class="hidden lg:block lg:w-1/4">
 				<Card>
-					<CardHeader class="pb-3">
-						<div class="flex items-center justify-between">
-							<CardTitle class="text-lg">Filters</CardTitle>
-							{#if activeFilterCount > 0}
-								<Button variant="ghost" size="sm" onclick={clearFilters} class="gap-1">
-									<X size={14} />
-									Clear All
-								</Button>
-							{/if}
-						</div>
-						{#if activeFilterCount > 0}
-							<p class="text-sm text-muted-foreground">
-								{activeFilterCount} active filter{activeFilterCount !== 1 ? 's' : ''}
-							</p>
-						{/if}
-					</CardHeader>
+					<FiltersHeader {activeFilterCount} {clearFilters} />
 
-					<CardContent class="space-y-6">
-						<!-- Search -->
-						<SearchFilter {handleSearch} {searchQuery} />
-
-						<!-- Sort -->
-						<SortByFilter {sortBy} {sortOrder} {toggleSortOrder} />
-
-						<!-- Genres -->
-						<GenreFilter {selectedGenres} {toggleGenre} />
-
-						<!-- Year Range -->
-						<YearRangeFilter {updateFilters} {yearRange} />
-
-						<!-- Rating Range -->
-						<RatingRangeFilter {ratingRange} {updateFilters} />
-
-						<!-- Duration Filter -->
-						<DurationFilter {filteredMovies} {updateFilters} />
-
-						<!-- Action Buttons -->
-						<div class="space-y-2 border-t border-border pt-4">
-							<Button variant="outline" class="w-full gap-2" onclick={clearFilters}>
-								<RefreshCw size={16} />
-								Reset Filters
-							</Button>
-							<Button class="w-full" onclick={() => (isFilterOpen = false)}>Apply Filters</Button>
-						</div>
-					</CardContent>
+					<FiltersContent
+						{clearFilters}
+						{filteredMovies}
+						{handleSearch}
+						{isFilterOpen}
+						{ratingRange}
+						{searchQuery}
+						{selectedGenres}
+						{sortBy}
+						{sortOrder}
+						{toggleGenre}
+						{toggleSortOrder}
+						{updateFilters}
+						{yearRange}
+					/>
 				</Card>
 			</div>
 
@@ -201,10 +160,21 @@
 									<SheetTitle>Filters</SheetTitle>
 									<SheetDescription>Refine your movie search</SheetDescription>
 								</SheetHeader>
-								<div class="space-y-6 py-6">
-									<!-- Mobile filter content would go here -->
-									<!-- You can reuse the filter components from desktop sidebar -->
-								</div>
+								<FiltersContent
+									{clearFilters}
+									{filteredMovies}
+									{handleSearch}
+									{isFilterOpen}
+									{ratingRange}
+									{searchQuery}
+									{selectedGenres}
+									{sortBy}
+									{sortOrder}
+									{toggleGenre}
+									{toggleSortOrder}
+									{updateFilters}
+									{yearRange}
+								/>
 							</SheetContent>
 						</Sheet>
 

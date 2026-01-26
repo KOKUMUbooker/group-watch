@@ -2,11 +2,11 @@
 	import { Slider } from '@/components/ui/slider';
 	import Star from '@lucide/svelte/icons/star';
 
-	interface RatingRangeFilter {
+	export interface RatingRangeFilterProps {
 		ratingRange: [number, number];
 		updateFilters: () => void;
 	}
-	let { ratingRange, updateFilters }: RatingRangeFilter = $props();
+	let { ratingRange, updateFilters }: RatingRangeFilterProps = $props();
 </script>
 
 <div class="space-y-3">

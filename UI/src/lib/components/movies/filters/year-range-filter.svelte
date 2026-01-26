@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Slider } from '@/components/ui/slider';
 	import Calendar from '@lucide/svelte/icons/calendar';
-	interface YearRangeFilterProps {
+	export interface YearRangeFilterProps {
 		yearRange: [number, number];
 		updateFilters: () => void;
 	}

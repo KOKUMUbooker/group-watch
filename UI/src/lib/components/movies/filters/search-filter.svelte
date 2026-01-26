@@ -4,7 +4,7 @@
 	import Search from '@lucide/svelte/icons/search';
 	import X from '@lucide/svelte/icons/x';
 
-	interface SearchFilterProps {
+	export interface SearchFilterProps {
 		searchQuery: string;
 		handleSearch: () => void;
 	}

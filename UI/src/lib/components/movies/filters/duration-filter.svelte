@@ -3,7 +3,7 @@
 	import Clock from '@lucide/svelte/icons/clock';
 	import type { Movie } from '../../../../types';
 
-	interface DurationFiltersProps {
+	export interface DurationFiltersProps {
 		filteredMovies: Movie[];
 		updateFilters: () => void;
 	}

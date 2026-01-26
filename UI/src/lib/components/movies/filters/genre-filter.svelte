@@ -3,7 +3,7 @@
 	import { Label } from '@/components/ui/label';
 	import { ALL_GENRES, type Genre } from '../../../../types';
 
-	interface GenreFiltersProps {
+	export interface GenreFiltersProps {
 		selectedGenres: Genre[];
 		toggleGenre: (genre: Genre) => void;
 	}
