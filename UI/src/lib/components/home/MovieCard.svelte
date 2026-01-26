@@ -15,7 +15,6 @@
 
 	const { movie }: { movie: Movie } = $props();
 	let isHovered = false;
-	console.log('movie : ', movie);
 
 	// Format duration to hours and minutes
 	const formatDuration = (minutes: number): string => {

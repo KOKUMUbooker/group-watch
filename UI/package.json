@@ -25,7 +25,6 @@
 		"@tailwindcss/typography": "^0.5.19",
 		"@tailwindcss/vite": "^4.1.17",
 		"@types/node": "^22",
-		"bits-ui": "^2.15.4",
 		"clsx": "^2.1.1",
 		"embla-carousel-svelte": "^8.6.0",
 		"eslint": "^9.39.1",
@@ -46,6 +45,7 @@
 		"vite": "^7.2.6"
 	},
 	"dependencies": {
+		"bits-ui": "^2.15.4",
 		"embla-carousel-autoplay": "^8.6.0",
 		"mode-watcher": "^1.1.0"
 	}

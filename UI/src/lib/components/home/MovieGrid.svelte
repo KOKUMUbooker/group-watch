@@ -1,13 +1,12 @@
 <!-- src/lib/components/movies/MovieGrid.svelte -->
 <script lang="ts">
-	import type { Movie } from '../../../types';
-	import MovieCard from './MovieCard.svelte';
-	import MovieCardCompact from './MovieCardCompact.svelte';
-	import { Button } from '../ui/button';
-	import { Skeleton } from '../ui/skeleton';
 	import Grid2x2 from '@lucide/svelte/icons/grid-2x2';
 	import List from '@lucide/svelte/icons/list';
-	import { fromTheme } from 'tailwind-merge';
+	import type { Movie } from '../../../types';
+	import { Button } from '../ui/button';
+	import { Skeleton } from '../ui/skeleton';
+	import MovieCard from './MovieCard.svelte';
+	import MovieCardCompact from './MovieCardCompact.svelte';
 
 	interface MovieGridInterface {
 		movies: Movie[];
@@ -20,11 +19,10 @@
 		movies = [],
 		isLoading = false,
 		viewMode = 'cards',
-		columns = 4,
+		columns = viewMode == 'cards' ? 3 : 4,
 		emptyMessage = 'No movies found'
 	}: MovieGridInterface = $props();
 	// console.log('Movie grid movies : ', movies);
-	console.log('viewMode : ', viewMode);
 
 	const gridColumns: { [key: number]: string } = {
 		1: 'grid-cols-1',

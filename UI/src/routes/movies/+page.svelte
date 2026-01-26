@@ -15,6 +15,9 @@
 	} from '$lib/components/ui/sheet';
 	import { Slider } from '$lib/components/ui/slider';
 	import { Tabs, TabsList, TabsTrigger } from '$lib/components/ui/tabs';
+	import ActiveFilters from '@/components/movies/active-filters.svelte';
+	import HeroHeader from '@/components/movies/hero-header.svelte';
+	import Label from '@/components/ui/label/label.svelte';
 	import SortDesc from '@lucide/svelte/icons/arrow-down-1-0';
 	import SortAsc from '@lucide/svelte/icons/arrow-up-1-0';
 	import Calendar from '@lucide/svelte/icons/calendar';
@@ -29,7 +32,12 @@
 	import { onMount } from 'svelte';
 	import { dummyMovies } from '../../data/movies';
 	import { ALL_GENRES, type Genre, type Movie } from '../../types';
-	import ActiveFilters from '@/components/movies/active-filters.svelte';
+	import SearchFilter from '@/components/movies/filters/search-filter.svelte';
+	import SortByFilter from '@/components/movies/filters/sort-by-filter.svelte';
+	import GenreFilter from '@/components/movies/filters/genre-filter.svelte';
+	import YearRangeFilter from '@/components/movies/filters/year-range-filter.svelte';
+	import RatingRangeFilter from '@/components/movies/filters/rating-range-filter.svelte';
+	import DurationFilter from '@/components/movies/filters/duration-filter.svelte';
 
 	// State
 	let movies: Movie[] = dummyMovies;
@@ -102,31 +110,7 @@
 
 <div class="min-h-screen bg-background">
 	<!-- Hero Header -->
-	<div class="border-b border-border bg-linear-to-r from-primary/10 to-secondary/10">
-		<div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-			<div class="flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
-				<div>
-					<h1 class="text-4xl font-bold tracking-tight">Movie Collection</h1>
-					<p class="mt-2 text-muted-foreground">
-						Browse our curated collection of {movies.length} movies
-					</p>
-				</div>
-				<div class="flex items-center gap-4">
-					<Button size="lg" class="gap-2">
-						<svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-							<path
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								stroke-width="2"
-								d="M12 4v16m8-8H4"
-							/>
-						</svg>
-						Add Movie
-					</Button>
-				</div>
-			</div>
-		</div>
-	</div>
+	<HeroHeader movieLength={movies.length} />
 
 	<div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 		<div class="flex flex-col gap-8 lg:flex-row">
@@ -152,173 +136,22 @@
 
 					<CardContent class="space-y-6">
 						<!-- Search -->
-						<div class="space-y-2">
-							<label class="text-sm font-medium">Search</label>
-							<div class="relative">
-								<Input
-									bind:value={searchQuery}
-									placeholder="Search movies..."
-									oninput={handleSearch}
-									class="pl-10"
-								/>
-								<Search
-									class="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 transform text-muted-foreground"
-								/>
-								{#if searchQuery}
-									<button
-										onclick={() => {
-											searchQuery = '';
-											handleSearch();
-										}}
-										class="absolute top-1/2 right-3 -translate-y-1/2 transform"
-									>
-										<X size={16} class="text-muted-foreground hover:text-foreground" />
-									</button>
-								{/if}
-							</div>
-						</div>
+						<SearchFilter {handleSearch} {searchQuery} />
 
 						<!-- Sort -->
-						<div class="space-y-2">
-							<label class="text-sm font-medium">Sort By</label>
-							<div class="flex gap-2">
-								<Select type="single">
-									<SelectTrigger class="flex-1">
-										{sortBy}
-									</SelectTrigger>
-									<SelectContent>
-										<SelectItem value="rating">Rating</SelectItem>
-										<SelectItem value="title">Title</SelectItem>
-										<SelectItem value="releaseDate">Release Date</SelectItem>
-										<SelectItem value="duration">Duration</SelectItem>
-									</SelectContent>
-								</Select>
-								<Button
-									variant="outline"
-									size="icon"
-									onclick={toggleSortOrder}
-									title={sortOrder === 'asc' ? 'Ascending' : 'Descending'}
-								>
-									{#if sortOrder === 'asc'}
-										<SortAsc size={16} />
-									{:else}
-										<SortDesc size={16} />
-									{/if}
-								</Button>
-							</div>
-						</div>
+						<SortByFilter {sortBy} {sortOrder} {toggleSortOrder} />
 
 						<!-- Genres -->
-						<div class="space-y-3">
-							<div class="flex items-center justify-between">
-								<label class="text-sm font-medium">Genres</label>
-								<span class="text-xs text-muted-foreground">
-									{selectedGenres.length} selected
-								</span>
-							</div>
-							<div class="flex flex-wrap gap-2">
-								{#each ALL_GENRES as genre}
-									<Badge
-										variant={selectedGenres.includes(genre) ? 'default' : 'outline'}
-										class="cursor-pointer transition-colors hover:bg-accent"
-										onclick={() => toggleGenre(genre)}
-									>
-										{genre}
-									</Badge>
-								{/each}
-							</div>
-						</div>
+						<GenreFilter {selectedGenres} {toggleGenre} />
 
 						<!-- Year Range -->
-						<div class="space-y-3">
-							<div class="flex items-center justify-between">
-								<label class="text-sm font-medium">
-									<Calendar size={14} class="mr-2 inline" />
-									Year Range
-								</label>
-								<span class="text-xs text-muted-foreground">
-									{yearRange[0]} - {yearRange[1]}
-								</span>
-							</div>
-							<Slider
-								min={1980}
-								max={2025}
-								step={1}
-								type="multiple"
-								bind:value={yearRange}
-								onchange={updateFilters}
-								class="py-4"
-							/>
-							<div class="flex justify-between text-sm text-muted-foreground">
-								<span>{yearRange[0]}</span>
-								<span>{yearRange[1]}</span>
-							</div>
-						</div>
+						<YearRangeFilter {updateFilters} {yearRange} />
 
 						<!-- Rating Range -->
-						<div class="space-y-3">
-							<div class="flex items-center justify-between">
-								<label class="text-sm font-medium">
-									<Star size={14} class="mr-2 inline" />
-									Rating
-								</label>
-								<span class="text-xs text-muted-foreground">
-									{ratingRange[0].toFixed(1)} - {ratingRange[1].toFixed(1)}
-								</span>
-							</div>
-							<Slider
-								min={0}
-								max={10}
-								step={0.5}
-								type="multiple"
-								bind:value={ratingRange}
-								onchange={updateFilters}
-								class="py-4"
-							/>
-							<div class="flex justify-between text-sm text-muted-foreground">
-								<span>{ratingRange[0].toFixed(1)}</span>
-								<span>{ratingRange[1].toFixed(1)}</span>
-							</div>
-						</div>
+						<RatingRangeFilter {ratingRange} {updateFilters} />
 
 						<!-- Duration Filter -->
-						<div class="space-y-2">
-							<label class="flex items-center gap-2 text-sm font-medium">
-								<Clock size={14} />
-								Duration
-							</label>
-							<Tabs class="w-full">
-								<TabsList class="grid grid-cols-4">
-									<TabsTrigger value="all" onclick={() => updateFilters()}>All</TabsTrigger>
-									<TabsTrigger
-										value="short"
-										onclick={() => {
-											// Filter short movies (< 90 min)
-											const filtered = filteredMovies.filter((m) => m.Minutes < 90);
-											filteredMovies = filtered;
-										}}>Short</TabsTrigger
-									>
-									<TabsTrigger
-										value="medium"
-										onclick={() => {
-											// Filter medium movies (90-150 min)
-											const filtered = filteredMovies.filter(
-												(m) => m.Minutes >= 90 && m.Minutes <= 150
-											);
-											filteredMovies = filtered;
-										}}>Medium</TabsTrigger
-									>
-									<TabsTrigger
-										value="long"
-										onclick={() => {
-											// Filter long movies (> 150 min)
-											const filtered = filteredMovies.filter((m) => m.Minutes > 150);
-											filteredMovies = filtered;
-										}}>Long</TabsTrigger
-									>
-								</TabsList>
-							</Tabs>
-						</div>
+						<DurationFilter {filteredMovies} {updateFilters} />
 
 						<!-- Action Buttons -->
 						<div class="space-y-2 border-t border-border pt-4">
@@ -327,41 +160,6 @@
 								Reset Filters
 							</Button>
 							<Button class="w-full" onclick={() => (isFilterOpen = false)}>Apply Filters</Button>
-						</div>
-					</CardContent>
-				</Card>
-
-				<!-- Stats Card -->
-				<Card class="mt-6">
-					<CardHeader class="pb-3">
-						<CardTitle class="text-lg">Collection Stats</CardTitle>
-					</CardHeader>
-					<CardContent class="space-y-4">
-						<div class="grid grid-cols-2 gap-4">
-							<div class="rounded-lg bg-secondary p-3 text-center">
-								<div class="text-2xl font-bold">{movies.length}</div>
-								<div class="text-sm text-muted-foreground">Total Movies</div>
-							</div>
-							<div class="rounded-lg bg-secondary p-3 text-center">
-								<div class="text-2xl font-bold">
-									{[...new Set(movies.map((m) => m.Genre))].length}
-								</div>
-								<div class="text-sm text-muted-foreground">Genres</div>
-							</div>
-						</div>
-						<div class="space-y-2">
-							<div class="flex justify-between text-sm">
-								<span class="text-muted-foreground">Avg Rating</span>
-								<span class="font-medium">
-									{(movies.reduce((acc, m) => acc + m.Rating, 0) / movies.length).toFixed(1)}/10
-								</span>
-							</div>
-							<div class="flex justify-between text-sm">
-								<span class="text-muted-foreground">Avg Duration</span>
-								<span class="font-medium">
-									{Math.round(movies.reduce((acc, m) => acc + m.Minutes, 0) / movies.length)} min
-								</span>
-							</div>
 						</div>
 					</CardContent>
 				</Card>
