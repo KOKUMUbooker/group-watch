@@ -2,21 +2,19 @@
 import {
 	BarChart3,
 	Film,
-	Home,
 	LayoutDashboard,
 	MessageSquare,
 	Settings,
 	Shield,
 	User,
 	Users,
-	type IconProps
 } from '@lucide/svelte';
 import type { Component } from 'svelte';
 
 export interface NavItem {
 	title: string;
 	url: string;
-	icon: Component<IconProps, {}, "">;
+	icon: Component;
 }
 
 // ============================================================================
