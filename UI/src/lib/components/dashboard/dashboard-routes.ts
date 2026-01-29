@@ -48,11 +48,11 @@ export const adminDashboardRoutes: NavItem[] = [
 
 	// 4. ANALYTICS & REPORTS TAB
 	// Single page containing: System analytics, Performance metrics, Reports generator, Audit log
-	{
-		title: 'Analytics & Reports',
-		url: '/dashboard/admin/analytics',
-		icon: BarChart3,
-	},
+	// {
+	// 	title: 'Analytics & Reports',
+	// 	url: '/dashboard/admin/analytics',
+	// 	icon: BarChart3,
+	// },
 
 	// 5. SYSTEM SETTINGS TAB
 	// Single page containing: General settings, Content settings, User settings, Database tools, Backup, Advanced config
