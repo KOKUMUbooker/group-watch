@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MovieManager.Models;
 
-class Review : EntityBase {
+public class Review : EntityBase {
     [Required]
     public int UserId {get; private set;}
 

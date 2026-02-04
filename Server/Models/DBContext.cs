@@ -7,12 +7,15 @@ public class MovieDbContext : DbContext
     public MovieDbContext(DbContextOptions<MovieDbContext> options) : base(options) {
     }
 
-    public DbSet<Movie> Movies => Set<Movie>();
+    public DbSet<Movie> Movies {get; set;}
+    public DbSet<User> Users {get; set;}
+    public DbSet<Review> Reviews {get; set;}
+    public DbSet<Role> Roles {get; set;}
+    public DbSet<Cast> Cast {get; set;}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("app");
-        modelBuilder.ApplyConfigurationsFromAssembly(typeof(MovieDbContext).Assembly);
         base.OnModelCreating(modelBuilder);
     }
 }
