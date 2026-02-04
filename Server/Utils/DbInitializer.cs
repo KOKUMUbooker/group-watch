@@ -5,7 +5,7 @@ namespace MovieManager.Utils;
 
 public static class DbInitializer
 {
-    public static async Task SeedAsync(MovieDbContext context)
+    public static async Task SeedAsync(MovieAppDbContext context)
     {
         // Ensure database exists and migrations are applied
         // await context.Database.MigrateAsync();

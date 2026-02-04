@@ -16,7 +16,7 @@ public class Program
         // Register services
         builder.Services.AddControllers();
 
-        builder.Services.AddDbContext<MovieDbContext>(options =>
+        builder.Services.AddDbContext<MovieAppDbContext>(options =>
         {
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
             // var dbURL = builder.Configuration["Movies:ConnectionStrings"];

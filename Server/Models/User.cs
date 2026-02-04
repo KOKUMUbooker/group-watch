@@ -9,8 +9,6 @@ public class User : EntityBase
     [StringLength(100, ErrorMessage = "Email cannot exceed 100 characters.")]
     public required string Email {get; set;}
 
-    public required string Password {get; set;}
-
     [MinLength(3,ErrorMessage = "Full name must be at least 3 characters long")]
     public required string FullName {get; set;}
 

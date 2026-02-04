@@ -2,9 +2,9 @@ using  Microsoft.EntityFrameworkCore;
 
 namespace MovieManager.Models;
 
-public class MovieDbContext : DbContext
+public class MovieAppDbContext : DbContext
 {
-    public MovieDbContext(DbContextOptions<MovieDbContext> options) : base(options) {
+    public MovieAppDbContext(DbContextOptions<MovieAppDbContext> options) : base(options) {
     }
 
     public DbSet<Movie> Movies {get; set;}
