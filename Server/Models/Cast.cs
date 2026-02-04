@@ -1,7 +1,6 @@
 namespace MovieManager.Models;
 
 public class Cast : EntityBase {
-    public Guid MovieId {get; set;}
     public required string Name {get; set;}
     public required string ImageUrl{get; set;}
 

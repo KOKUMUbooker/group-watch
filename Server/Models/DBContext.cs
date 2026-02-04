@@ -7,8 +7,9 @@ public class MovieAppDbContext : DbContext
     public MovieAppDbContext(DbContextOptions<MovieAppDbContext> options) : base(options) {
     }
 
-    public DbSet<Movie> Movies {get; set;}
-    public DbSet<User> Users {get; set;}
+    public DbSet<Movie> Movies {get; set;} = null!;
+    public DbSet<User> Users {get; set;} = null!;
+    public DbSet<MovieCast> MovieCasts {get; set;} = null!;
     public DbSet<Review> Reviews {get; set;}
     public DbSet<Role> Roles {get; set;}
     public DbSet<Cast> Cast {get; set;}
@@ -17,45 +18,44 @@ public class MovieAppDbContext : DbContext
     {
         modelBuilder.HasDefaultSchema("app");
 
-         // 1. MOVIE - REVIEWS (One-to-Many)
-        // One Movie has many Reviews, One Review belongs to one Movie
+        // 1. MOVIE - REVIEWS (One-to-Many)
         modelBuilder.Entity<Review>()
             .HasOne(r => r.Movie)
             .WithMany(m => m.Reviews)
             .HasForeignKey(r => r.MovieId)
-            .OnDelete(DeleteBehavior.Cascade); // Delete reviews when movie is deleted
+            .OnDelete(DeleteBehavior.Cascade);
         
         // 2. USER - REVIEWS (One-to-Many)
-        // One User has many Reviews, One Review belongs to one User
         modelBuilder.Entity<Review>()
             .HasOne(r => r.User)
             .WithMany(u => u.Reviews)
             .HasForeignKey(r => r.UserId)
-            .OnDelete(DeleteBehavior.Cascade); // Delete reviews when user is deleted
+            .OnDelete(DeleteBehavior.Cascade);
 
         // 3. ROLE - USER (One-to-Many)
-        // One Role has many Users, One User belongs to one Role
         modelBuilder.Entity<User>()
             .HasOne(u => u.Role)
             .WithMany(r => r.Users)
             .HasForeignKey(u => u.RoleId)
-            .OnDelete(DeleteBehavior.Restrict); // Prevent deleting role if users exist
+            .OnDelete(DeleteBehavior.Restrict);
 
-        // 4. Many to many configuration for 
+        // 4. MANY-TO-MANY: Movie - Cast via MovieCast
         modelBuilder.Entity<MovieCast>()
-            .HasKey(mc => new { mc.MovieId, mc.CastId });
+            .HasKey(mc => new { mc.MovieId, mc.CastId }); // Composite primary key
             
+        // MovieCast -> Movie relationship
         modelBuilder.Entity<MovieCast>()
             .HasOne(mc => mc.Movie)
             .WithMany(m => m.MovieCasts)
             .HasForeignKey(mc => mc.MovieId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade); // Delete join records when movie deleted
             
+        // MovieCast -> Cast relationship  
         modelBuilder.Entity<MovieCast>()
             .HasOne(mc => mc.Cast)
             .WithMany(c => c.MovieCasts)
             .HasForeignKey(mc => mc.CastId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Cascade); // Delete join records when cast deleted
 
         base.OnModelCreating(modelBuilder);
 
@@ -63,10 +63,10 @@ public class MovieAppDbContext : DbContext
         ConfigureEntityConstraints(modelBuilder);
         
         // Configure indexes for performance
-        ConfigureIndexes(modelBuilder);
+        ConfigureIndexes(modelBuilder); 
     }
 
-      private static void ConfigureEntityConstraints(ModelBuilder modelBuilder)
+    private static void ConfigureEntityConstraints(ModelBuilder modelBuilder)
     {
         // MOVIE constraints
         modelBuilder.Entity<Movie>()
@@ -86,7 +86,7 @@ public class MovieAppDbContext : DbContext
             
         modelBuilder.Entity<Movie>()
             .Property(m => m.Rating)
-            .HasPrecision(3, 1); // e.g., 8.5
+            .HasPrecision(3, 1);
             
         // USER constraints
         modelBuilder.Entity<User>()
@@ -115,8 +115,18 @@ public class MovieAppDbContext : DbContext
             .Property(c => c.ImageUrl)
             .IsRequired()
             .HasMaxLength(500);
+            
+        // MOVIECAST constraints  
+        modelBuilder.Entity<MovieCast>()
+            .Property(mc => mc.CharacterName)  
+            .HasMaxLength(100)
+            .IsRequired(false);  
+            
+        modelBuilder.Entity<MovieCast>()
+            .Property(mc => mc.Order) // For display order
+            .HasDefaultValue(0);
     }
-    
+
     private static void ConfigureIndexes(ModelBuilder modelBuilder)
     {
         // Movie indexes
@@ -153,9 +163,16 @@ public class MovieAppDbContext : DbContext
             
         // Cast indexes
         modelBuilder.Entity<Cast>()
-            .HasIndex(c => c.MovieId);
-            
-        modelBuilder.Entity<Cast>()
             .HasIndex(c => c.Name);
+            
+        // MovieCast indexes
+        modelBuilder.Entity<MovieCast>()
+            .HasIndex(mc => mc.MovieId);
+            
+        modelBuilder.Entity<MovieCast>()
+            .HasIndex(mc => mc.CastId);
+            
+        modelBuilder.Entity<MovieCast>()
+            .HasIndex(mc => mc.CharacterName);
     }
 }

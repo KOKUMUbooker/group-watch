@@ -20,7 +20,6 @@ namespace MovieManager.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    MovieId = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     ImageUrl = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
                     Created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
@@ -71,28 +70,30 @@ namespace MovieManager.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MovieCast",
+                name: "MovieCasts",
                 schema: "app",
                 columns: table => new
                 {
                     MovieId = table.Column<Guid>(type: "uuid", nullable: false),
                     CastId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CharacterName = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    Order = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Created = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     LastModified = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MovieCast", x => new { x.MovieId, x.CastId });
+                    table.PrimaryKey("PK_MovieCasts", x => new { x.MovieId, x.CastId });
                     table.ForeignKey(
-                        name: "FK_MovieCast_Cast_CastId",
+                        name: "FK_MovieCasts_Cast_CastId",
                         column: x => x.CastId,
                         principalSchema: "app",
                         principalTable: "Cast",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MovieCast_Movies_MovieId",
+                        name: "FK_MovieCasts_Movies_MovieId",
                         column: x => x.MovieId,
                         principalSchema: "app",
                         principalTable: "Movies",
@@ -158,22 +159,28 @@ namespace MovieManager.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cast_MovieId",
-                schema: "app",
-                table: "Cast",
-                column: "MovieId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Cast_Name",
                 schema: "app",
                 table: "Cast",
                 column: "Name");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MovieCast_CastId",
+                name: "IX_MovieCasts_CastId",
                 schema: "app",
-                table: "MovieCast",
+                table: "MovieCasts",
                 column: "CastId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MovieCasts_CharacterName",
+                schema: "app",
+                table: "MovieCasts",
+                column: "CharacterName");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MovieCasts_MovieId",
+                schema: "app",
+                table: "MovieCasts",
+                column: "MovieId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Movies_Rating",
@@ -236,7 +243,7 @@ namespace MovieManager.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "MovieCast",
+                name: "MovieCasts",
                 schema: "app");
 
             migrationBuilder.DropTable(

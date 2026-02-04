@@ -40,17 +40,12 @@ namespace MovieManager.Migrations
                     b.Property<DateTimeOffset>("LastModified")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("MovieId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MovieId");
 
                     b.HasIndex("Name");
 
@@ -130,6 +125,10 @@ namespace MovieManager.Migrations
                     b.Property<Guid>("CastId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("CharacterName")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("timestamp with time zone");
 
@@ -139,11 +138,20 @@ namespace MovieManager.Migrations
                     b.Property<DateTimeOffset>("LastModified")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("Order")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(0);
+
                     b.HasKey("MovieId", "CastId");
 
                     b.HasIndex("CastId");
 
-                    b.ToTable("MovieCast", "app");
+                    b.HasIndex("CharacterName");
+
+                    b.HasIndex("MovieId");
+
+                    b.ToTable("MovieCasts", "app");
                 });
 
             modelBuilder.Entity("MovieManager.Models.Review", b =>
