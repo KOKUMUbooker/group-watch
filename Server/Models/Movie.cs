@@ -2,65 +2,14 @@ namespace MovieManager.Models;
 
 public sealed class Movie : EntityBase
 {
-    public string Title { get; private set; }
-    public string Genre { get; private set; }
-    public DateTimeOffset ReleaseDate { get; private set; }
-    public double Rating { get; private set; }
-    public string Description {get; private set;}
-    public string AgeRating {get; private set;}
-    public string ImageUrl {get;private set;}
-    public string AddedBy {get;private set;}
-    public DateTimeOffset CreatedAt { get; private set; }
-    public bool Verified { get; private set; }
-    
-    // Private constructor for ORM frameworks
-    private Movie()
-    {
-        Title = string.Empty;
-        Genre = string.Empty;
-        Description = string.Empty;
-        AgeRating = string.Empty;
-        ImageUrl = string.Empty;
-        AddedBy = string.Empty;
-    }
-    private Movie(string title, string genre, DateTimeOffset releaseDate, double rating)
-    {
-        Title = title;
-        Genre = genre;
-        ReleaseDate = releaseDate;
-        Rating = rating;
-    }
-
-    public static Movie Create(string title, string genre, DateTimeOffset releaseDate, double rating)
-    {
-        ValidateInputs(title, genre, releaseDate, rating);
-        return new Movie(title, genre, releaseDate, rating);
-    }
-
-    public void Update(string title, string genre, DateTimeOffset releaseDate, double rating)
-    {
-        ValidateInputs(title, genre, releaseDate, rating);
-
-        Title = title;
-        Genre = genre;
-        ReleaseDate = releaseDate;
-        Rating = rating;
-
-        UpdateLastModified();
-    }
-
-    private static void ValidateInputs(string title, string genre, DateTimeOffset releaseDate, double rating)
-    {
-        if (string.IsNullOrWhiteSpace(title))
-            throw new ArgumentException("Title cannot be null or empty.", nameof(title));
-
-        if (string.IsNullOrWhiteSpace(genre))
-            throw new ArgumentException("Genre cannot be null or empty.", nameof(genre));
-
-        if (releaseDate > DateTimeOffset.UtcNow)
-            throw new ArgumentException("Release date cannot be in the future.", nameof(releaseDate));
-
-        if (rating < 0 || rating > 10)
-            throw new ArgumentException("Rating must be between 0 and 10.", nameof(rating));
-    }
+    public required string Title { get; set; }
+    public required string Genre { get; set; }
+    public DateTimeOffset ReleaseDate { get; set; }
+    public double Rating { get; set; }
+    public required string Description {get; set;}
+    public required string AgeRating {get; set;}
+    public required string ImageUrl {get; set;}
+    public required string AddedBy {get; set;}
+    public DateTimeOffset CreatedAt { get; set; }
+    public bool Verified { get; set; }
 }

@@ -1,8 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using MovieManager.Models;
 using MovieManager.Utils;
-using MovieManager.Endpoints;
-using MovieManager.Services;
 
 namespace MovieManager;
 
@@ -12,25 +10,26 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
-        builder.Services.AddAuthorization();
-
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        builder.Services.AddTransient<IMovieService, MovieService>();
+        // Register services
+        builder.Services.AddControllers();
 
         builder.Services.AddDbContext<MovieDbContext>(options =>
         {
-            // var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-            var dbURL = builder.Configuration["Movies:ConnectionStrings"];
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+            // var dbURL = builder.Configuration["Movies:ConnectionStrings"];
             options.UseNpgsql(connectionString);
         });
 
         var app = builder.Build();
 
-        // Configure the HTTP request pipeline.
+        if (app.Environment.IsProduction())
+        {
+            app.UseHttpsRedirection();
+        }
+
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -39,15 +38,7 @@ public class Program
 
         // SEED DATABASE
         await app.SeedDatabaseAsync();
-
-        app.UseHttpsRedirection();
-
-        app.UseAuthorization();
-
-        app.MapMovieEndpoints();
-
-        app.MapGet("/", () => "Hello World!")
-        .Produces(200, typeof(string));
+        app.MapControllers();
 
         app.Run();
     }
