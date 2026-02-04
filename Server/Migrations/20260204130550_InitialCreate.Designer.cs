@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace MovieManager.Migrations
 {
     [DbContext(typeof(MovieAppDbContext))]
-    [Migration("20260204095250_HookUpEntities")]
-    partial class HookUpEntities
+    [Migration("20260204130550_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,19 +37,25 @@ namespace MovieManager.Migrations
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<DateTimeOffset>("LastModified")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("MovieId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("MovieId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MovieId");
+
+                    b.HasIndex("Name");
 
                     b.ToTable("Cast", "app");
                 });
@@ -66,7 +72,8 @@ namespace MovieManager.Migrations
 
                     b.Property<string>("AgeRating")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
 
                     b.Property<DateTimeOffset>("Created")
                         .HasColumnType("timestamp with time zone");
@@ -76,7 +83,8 @@ namespace MovieManager.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
 
                     b.Property<string>("Genre")
                         .IsRequired()
@@ -90,6 +98,7 @@ namespace MovieManager.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<double>("Rating")
+                        .HasPrecision(3, 1)
                         .HasColumnType("double precision");
 
                     b.Property<DateTimeOffset>("ReleaseDate")
@@ -97,14 +106,47 @@ namespace MovieManager.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
 
                     b.Property<bool>("Verified")
                         .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Rating");
+
+                    b.HasIndex("ReleaseDate");
+
+                    b.HasIndex("Title");
+
+                    b.HasIndex("Verified");
+
                     b.ToTable("Movies", "app");
+                });
+
+            modelBuilder.Entity("MovieManager.Models.MovieCast", b =>
+                {
+                    b.Property<Guid>("MovieId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("CastId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("MovieId", "CastId");
+
+                    b.HasIndex("CastId");
+
+                    b.ToTable("MovieCast", "app");
                 });
 
             modelBuilder.Entity("MovieManager.Models.Review", b =>
@@ -119,17 +161,25 @@ namespace MovieManager.Migrations
                     b.Property<DateTimeOffset>("LastModified")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("MovieId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("MovieId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(5000)
+                        .HasColumnType("character varying(5000)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MovieId");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("MovieId", "UserId")
+                        .IsUnique();
 
                     b.ToTable("Reviews", "app");
                 });
@@ -170,7 +220,8 @@ namespace MovieManager.Migrations
 
                     b.Property<string>("FullName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTimeOffset>("LastModified")
                         .HasColumnType("timestamp with time zone");
@@ -183,12 +234,88 @@ namespace MovieManager.Migrations
                         .IsRequired()
                         .HasColumnType("bytea");
 
-                    b.Property<int>("RoleId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("RoleId");
+
                     b.ToTable("Users", "app");
+                });
+
+            modelBuilder.Entity("MovieManager.Models.MovieCast", b =>
+                {
+                    b.HasOne("MovieManager.Models.Cast", "Cast")
+                        .WithMany("MovieCasts")
+                        .HasForeignKey("CastId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MovieManager.Models.Movie", "Movie")
+                        .WithMany("MovieCasts")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Cast");
+
+                    b.Navigation("Movie");
+                });
+
+            modelBuilder.Entity("MovieManager.Models.Review", b =>
+                {
+                    b.HasOne("MovieManager.Models.Movie", "Movie")
+                        .WithMany("Reviews")
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MovieManager.Models.User", "User")
+                        .WithMany("Reviews")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Movie");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("MovieManager.Models.User", b =>
+                {
+                    b.HasOne("MovieManager.Models.Role", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("MovieManager.Models.Cast", b =>
+                {
+                    b.Navigation("MovieCasts");
+                });
+
+            modelBuilder.Entity("MovieManager.Models.Movie", b =>
+                {
+                    b.Navigation("MovieCasts");
+
+                    b.Navigation("Reviews");
+                });
+
+            modelBuilder.Entity("MovieManager.Models.Role", b =>
+                {
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("MovieManager.Models.User", b =>
+                {
+                    b.Navigation("Reviews");
                 });
 #pragma warning restore 612, 618
         }

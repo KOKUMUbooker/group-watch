@@ -2,13 +2,18 @@ using System.ComponentModel.DataAnnotations;
 
 namespace MovieManager.Models;
 
-public class Review : EntityBase {
+public class Review : EntityBase 
+{
     [Required]
-    public int UserId {get; private set;}
+    public Guid UserId { get; private set; }
 
     [Required]
-    public int MovieId {get; private set;}
+    public Guid MovieId { get; private set; }
     
     [Required]
-    public required string Text {get; set;}
+    public required string Text { get; set; }
+    
+    // Navigation properties
+    public User User { get; set; } = null!;
+    public Movie Movie { get; set; } = null!;
 }

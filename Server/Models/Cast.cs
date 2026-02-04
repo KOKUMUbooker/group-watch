@@ -1,7 +1,10 @@
 namespace MovieManager.Models;
 
 public class Cast : EntityBase {
-    public int MovieId {get; set;}
+    public Guid MovieId {get; set;}
     public required string Name {get; set;}
     public required string ImageUrl{get; set;}
+
+    // Navigational properties
+    public List<MovieCast> MovieCasts { get; set; } = new List<MovieCast>();
 }
