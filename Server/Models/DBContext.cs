@@ -14,12 +14,15 @@ public class MovieAppDbContext : DbContext
     public DbSet<Review> Reviews {get; set;}
     public DbSet<Role> Roles {get; set;}
     public DbSet<Cast> Cast {get; set;}
+    public DbSet<Client> Clients {get; set;}
+    public DbSet<RefreshToken> RefreshTokens {get; set;}
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.HasDefaultSchema("app");
 
         // 1. MOVIE - REVIEWS (One-to-Many)
+        // A Movie can have many reviews
         modelBuilder.Entity<Review>()
             .HasOne(r => r.Movie)
             .WithMany(m => m.Reviews)
@@ -27,6 +30,7 @@ public class MovieAppDbContext : DbContext
             .OnDelete(DeleteBehavior.Cascade);
         
         // 2. USER - REVIEWS (One-to-Many)
+        // A user can have many reviews
         modelBuilder.Entity<Review>()
             .HasOne(r => r.User)
             .WithMany(u => u.Reviews)
@@ -34,13 +38,30 @@ public class MovieAppDbContext : DbContext
             .OnDelete(DeleteBehavior.Cascade);
 
         // 3. ROLE - USER (One-to-Many)
+        // A role can have many users
         modelBuilder.Entity<User>()
             .HasOne(u => u.Role)
             .WithMany(r => r.Users)
             .HasForeignKey(u => u.RoleId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        // 4. MANY-TO-MANY: Movie - Cast via MovieCast
+        // 4. RefreshToken -> User (Many-to-One)
+        // One User can have many RefreshTokens
+        modelBuilder.Entity<RefreshToken>()
+            .HasOne(rt => rt.User)
+            .WithMany(u => u.RefreshTokens)
+            .HasForeignKey(rt => rt.UserId)
+            .OnDelete(DeleteBehavior.Cascade); 
+        
+        // 5. RefreshToken -> Client (Many-to-One)
+        // One Client can have many RefreshTokens
+        modelBuilder.Entity<RefreshToken>()
+            .HasOne(rt => rt.Client)
+            .WithMany(c => c.RefreshTokens)
+            .HasForeignKey(rt => rt.ClientId)
+            .OnDelete(DeleteBehavior.Restrict); 
+
+        // 5. MANY-TO-MANY: Movie - Cast via MovieCast
         modelBuilder.Entity<MovieCast>()
             .HasKey(mc => new { mc.MovieId, mc.CastId }); // Composite primary key
             
@@ -62,6 +83,7 @@ public class MovieAppDbContext : DbContext
 
         SeedRoles(modelBuilder);
         SeedAdminUser(modelBuilder);
+        SeedDefaultClient(modelBuilder);
 
         // Configure required properties and constraints
         ConfigureEntityConstraints(modelBuilder);
@@ -108,6 +130,29 @@ public class MovieAppDbContext : DbContext
                 PasswordHash = passwordHash,
                 PasswordSalt = passwordSalt,
                 RoleId = RoleConstants.AdminRoleId, 
+                Created = now,
+                LastModified = now
+            }
+        );
+    }
+
+    private static void SeedDefaultClient(ModelBuilder modelBuilder)
+    {
+        var now = DateTimeOffset.UtcNow;
+
+        // Generate a client secret (in production, use a secure random generator)
+        var clientId = "movie-manager-web";
+        var clientSecret = Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes("movie-manager-secret-key"));
+
+        modelBuilder.Entity<Client>().HasData(
+            new Client
+            {
+                Id = Guid.Parse("cccccccc-cccc-cccc-cccc-cccccccccccc"), // Fixed GUID
+                ClientId = clientId,
+                Name = "Movie Manager Web Application",
+                ClientSecret = clientSecret,
+                ClientURL = "https://localhost:5176",  
+                IsActive = true,
                 Created = now,
                 LastModified = now
             }
@@ -173,6 +218,50 @@ public class MovieAppDbContext : DbContext
         modelBuilder.Entity<MovieCast>()
             .Property(mc => mc.Order) // For display order
             .HasDefaultValue(0);
+
+        // CLIENT constraints
+        modelBuilder.Entity<Client>(entity =>
+        {
+            entity.Property(c => c.ClientId)
+                .IsRequired()
+                .HasMaxLength(100);
+                
+            entity.HasIndex(c => c.ClientId)
+                .IsUnique(); // ClientId should be unique
+                
+            entity.Property(c => c.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+                
+            entity.Property(c => c.ClientSecret)
+                .IsRequired()
+                .HasMaxLength(500);
+                
+            entity.Property(c => c.ClientURL)
+                .IsRequired()
+                .HasMaxLength(500);
+                
+            entity.Property(c => c.IsActive)
+                .HasDefaultValue(true);
+        });
+
+          // REFRESH TOKENS constraints
+        modelBuilder.Entity<RefreshToken>(entity =>
+        {
+            entity.Property(rt => rt.Token)
+                .IsRequired()
+                .HasMaxLength(500);
+                
+            entity.HasIndex(rt => rt.Token)
+                .IsUnique(); // Token should be unique
+                
+            entity.Property(rt => rt.JwtId)
+                .IsRequired()
+                .HasMaxLength(100);
+                
+            entity.Property(rt => rt.CreatedByIp)
+                .HasMaxLength(50);
+        });
     }
 
     private static void ConfigureIndexes(ModelBuilder modelBuilder)
@@ -222,5 +311,22 @@ public class MovieAppDbContext : DbContext
             
         modelBuilder.Entity<MovieCast>()
             .HasIndex(mc => mc.CharacterName);
+
+        // RefreshTokens indexes
+        modelBuilder.Entity<RefreshToken>()
+            .HasIndex(r=>r.UserId);
+
+        modelBuilder.Entity<RefreshToken>()
+            .HasIndex(r=>r.ClientId);
+
+        modelBuilder.Entity<RefreshToken>()
+            .HasIndex(r=>r.Expires);
+        
+        modelBuilder.Entity<RefreshToken>()
+            .HasIndex(r=>r.IsRevoked);
+
+        modelBuilder.Entity<RefreshToken>()
+            .HasIndex(r=>new { r.UserId, r.IsRevoked, r.Expires });
+
     }
 }

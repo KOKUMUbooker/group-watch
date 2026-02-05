@@ -24,4 +24,5 @@ public class User : EntityBase
     // Navigation properties
     public Role Role { get; set; } = null!;
     public List<Review> Reviews { get; set; } = new List<Review>();
+    public ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 }
