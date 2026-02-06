@@ -10,8 +10,12 @@
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { cn, type WithElementRef } from '$lib/utils.js';
 	import { loginSchema } from '@/forms';
+	import { createMutation } from '@tanstack/svelte-query';
 	import type { HTMLFormAttributes } from 'svelte/elements';
+	import { apiFetch, type LoginData } from '../../../api';
+	import { CLIENT_ID } from '../../../constants';
 	import HelperText from '../common/HelperText.svelte';
+	import { API_BASE_URL } from '../../../api/urls';
 
 	let {
 		ref = $bindable(null),
@@ -24,6 +28,19 @@
 	});
 	let errors: Record<string, string> = $state({});
 	let touched: Record<string, boolean> = $state({});
+
+	const { mutate, isPending, error, data } = createMutation<
+		unknown, // response type
+		Error, // error type
+		LoginData // variables type
+	>(() => ({
+		mutationFn: (data) =>
+			apiFetch(`${API_BASE_URL}/api/auth/login`, {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(data)
+			})
+	}));
 
 	function validateField(field: keyof typeof formData) {
 		const partial = loginSchema.pick({ [field]: true } as any);
@@ -41,7 +58,7 @@
 		validateField(field);
 	}
 
-	function onSubmit(event: SubmitEvent) {
+	async function onSubmit(event: SubmitEvent) {
 		event.preventDefault();
 
 		// mark everything touched
@@ -59,8 +76,13 @@
 		// fully valid data
 		console.log('SUBMIT OK', result.data);
 
+		mutate({ ...formData, ClientId: CLIENT_ID }, {});
+
 		// continue: API call, navigation, etc.
 	}
+	console.log('error : ', error);
+	console.log('isPending : ', isPending);
+	console.log('data : ', data);
 
 	const id = $props.id();
 </script>
