@@ -22,7 +22,7 @@ public class Program
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
         builder.Services.AddSingleton<IClientCacheService, ClientCacheService>();
-
+ 
         builder.Services.AddDbContext<MovieAppDbContext>(options =>
         {
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
