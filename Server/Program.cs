@@ -21,6 +21,8 @@ public class Program
         builder.Services.AddMemoryCache();
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<ITokenService, TokenService>();
+        builder.Services.AddScoped<IEmailService, EmailService>();
+        builder.Services.AddScoped<IEmailTemplateService,EmailTemplateService>();
         builder.Services.AddSingleton<IClientCacheService, ClientCacheService>();
  
         builder.Services.AddDbContext<MovieAppDbContext>(options =>
