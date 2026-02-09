@@ -14,13 +14,15 @@ public class AuthController : ControllerBase
     private readonly IUserService _userService;
     private IEmailService _emailService;
     private IEmailTemplateService _templateService;
+    private IConfiguration _configuration;
 
-    public AuthController(MovieAppDbContext context, IUserService userService,IEmailService emailService,IEmailTemplateService templateService)
+    public AuthController(MovieAppDbContext context, IUserService userService,IEmailService emailService,IEmailTemplateService templateService,IConfiguration configuration)
     {
         _context = context;
         _userService = userService;
         _emailService = emailService;
         _templateService = templateService;
+        _configuration = configuration;
     }
 
     [HttpPost("sign-up")]
@@ -115,7 +117,9 @@ public class AuthController : ControllerBase
         user.EmailVerificationTokenExpiry = null;
         await _context.SaveChangesAsync();
         
-        return Ok(new { message = "Email verified successfully." });
+        // return Ok(new { message = "Email verified successfully." });
+        string clientUrl = _configuration.GetValue<string>("UIClient:URL") ?? "http://localhost:5173";
+        return Redirect($"{clientUrl}/email-verified");
     }
 
     [HttpPost("resend-verification")]
@@ -132,9 +136,13 @@ public class AuthController : ControllerBase
         user.EmailVerificationTokenExpiry = DateTime.UtcNow.AddHours(24);
         await _context.SaveChangesAsync();
         
-        // Send email (implement your email service)
-        // await _emailService.SendVerificationEmail(user.Email, user.EmailVerificationToken);
+        // Send verification email
+        var baseUrl = $"{Request.Scheme}://{Request.Host}";
+        var verificationUrl =  $"{baseUrl}/api/auth/verify-email?token={user.EmailVerificationToken}";
+        string htmlBody =  await _templateService.GenerateVerificationEmail("Movie-Manager", user.FullName,verificationUrl);
+
+        await _emailService.SendEmail(user.Email,"Verify email",htmlBody);
         
-        return Ok(new { message = "Verification email sent." });
+        return Ok(new { message = "Verification email sent." ,emailVerificationToken = user.EmailVerificationToken });
     }
 }
