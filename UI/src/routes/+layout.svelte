@@ -1,11 +1,11 @@
 <script lang="ts">
 	import favicon from '$lib/assets/favicon.svg';
 	import Header from '@/components/common/Header.svelte';
+	import { Toaster } from '@/components/ui/sonner';
 	import { QueryClientProvider } from '@tanstack/svelte-query';
 	import { ModeWatcher } from 'mode-watcher';
 	import { queryClient } from '../api';
 	import './layout.css';
-	import { Toaster } from '@/components/ui/sonner';
 
 	let { children } = $props();
 </script>
