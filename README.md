@@ -1,123 +1,121 @@
-# 🎬 GroupWatch - Movie Night Coordinator
+# **🎬 FlickPick - Stop Debating, Start Watching**
 
-Plan group movie nights without the chaos.
+**End the "what should we watch?" debate for good.**
 
-Movie Night Coordinator is a full‑stack web application designed to eliminate the friction of planning movie nights with friends, couples, or families. Instead of endless group chats and indecision, the app provides a structured, fair, and fun way to decide *what* to watch and *when* to watch it.
-
----
-
-## The Problem
-
-Planning a group movie night usually looks like this:
-
-* Endless suggestions in group chats
-* No clear voting or decision process
-* Conflicting schedules
-* Someone suggests a movie that isn’t available on everyone’s streaming service
-
-The result? Decision fatigue, frustration, or the movie night never happens.
+FlickPick is a decision-making platform that helps friends, couples, and families choose movies together—without the endless group chat debates. We solve the coordination problem so you can focus on the fun part: actually watching.
 
 ---
 
-## The Solution
+## ** The Problem**
 
-Movie Night Coordinator centralizes movie selection, scheduling, and discussion into one focused experience.
+### **The Movie Night Planning Nightmare:**
+-  **30+ minutes** lost debating in group chats
+-  **No fair system** - someone always compromises
+-  **Scheduling headaches** across time zones and busy lives
+-  **Streaming confusion** - "Who has Netflix? Does anyone have Hulu?"
+-  **Lost conversations** - Great discussions disappear in chat history
 
-It helps groups:
-
-* Decide **what to watch** using structured voting
-* Agree on **when to watch** with scheduling tools
-* Ensure movies are **actually available** to stream
-* Discuss the movie **after watching**, all in one place
-
----
-
-## Core Features
-
-### Shared Watchlists
-
-* Create watchlists per group or movie night
-* Add movies collaboratively
-* Public and private movie entries
-
-### Voting System
-
-* Majority‑rules voting to avoid endless debate
-* Optional **veto** system for strong objections
-* Clear visual indicators of leading choices
-
-### Scheduling
-
-* Movie night scheduling with date/time proposals
-* Conflict‑aware voting on available times
-* Calendar integration (planned)
-
-### Post‑Watch Discussions
-
-* Dedicated discussion threads per movie night
-* Share thoughts, ratings, and reactions after watching
-* Keep conversations organized and searchable
-
-### Streaming Availability Checker (future enhancement)
-
-* See which streaming platforms a movie is available on
-* Avoid picking movies no one can access
-* Region‑aware availability
+**Result:** Decision fatigue, frustration, or movie night never happens.
 
 ---
 
-## Who This Is For
+## ** The Solution**
 
-* Friend groups planning regular movie nights
-* Couples who struggle to agree on what to watch
-* Families coordinating shared viewing time
-* Anyone tired of scrolling streaming apps for 30 minutes
+FlickPick transforms chaotic planning into a **simple 4-step process:**
 
----
+1. **Create** a group for your movie nights
+2. **Suggest & Vote** on movies with fair voting (up/down + veto power)
+3. **Schedule** a time that works for everyone
+4. **Watch & Discuss** with post-movie ratings and conversations
 
-## Tech Stack
-
-**Frontend**
-
-* Svelte
-
-**Backend**
-
-* ASP.NET Core
-
-**Authentication**
-
-* JWT‑based authentication
-
-**Database**
-
-* Postgesql
+**We don't stream movies—we help you decide which ones to watch.**
 
 ---
 
-## Project Goals
+## ** Core Features**
 
-* Solve a real, recurring coordination problem
-* Avoid "just another CRUD app" by focusing on behavior and decision‑making
-* Build a clean, maintainable full‑stack architecture
-* Serve as a strong portfolio project demonstrating real‑world problem solving
+### ** Smart Voting System**
+- **Upvote/downvote** movies in real-time
+- **One veto per person** to prevent absolute no-gos
+- **Live results** so everyone sees what's winning
+- **Streaming availability check** before voting
+
+### ** Group Coordination**
+- **Persistent groups** for your friend circles
+- **Anonymous voting** - friends can vote without accounts
+- **Easy invites** with shareable links
+- **Member management** with admin controls
+
+### ** Decision & Scheduling**
+- **Calendar integration** to find mutual availability
+- **Time zone support** for long-distance friends
+- **Reminders & notifications** for upcoming movie nights
+- **Watch tracking** - mark when you actually start watching
+
+### ** Post-Movie Experience**
+- **Group ratings** (1-10 with averages)
+- **Watch history** - see all movies your group has watched
+
+## ** Tech Stack**
+
+### **Frontend**
+- **Svelte** + **SvelteKit** - Reactive, fast UI
+- **TypeScript** - Type-safe development
+- **Tailwind CSS** + **shadcn-svelte** - Beautiful, consistent components
+- **Lucide Icons** - Clean iconography
+
+### **Backend**
+- **ASP.NET Core** - Robust API framework
+- **Entity Framework Core** - Database ORM
+- **PostgreSQL** - Relational database with JSONB support
+- **SignalR** - Real-time voting and chat
+
+### **APIs & Services**
+- **TMDB API** - Movie metadata and details
+- **JustWatch API** - Streaming availability data
+- **JWT Authentication** - Secure user sessions
 
 ---
 
-## Future Ideas
+## ** Who It's For**
 
-* Smart recommendations based on group preferences
-* "One‑click pick" when voting is tied
-* Notifications and reminders
-* Mobile‑friendly PWA support
-* Integration with external movie APIs
-
----
-
-## Status
-
- Actively in development 
+### **Perfect for:**
+- **Friend groups** with weekly movie nights
+- **Long-distance relationships** staying connected
+- **Families** coordinating across households
+- **Film clubs** organizing viewings and discussions
+- **Remote teams** building culture through shared experiences
+- **Anyone tired of scrolling streaming apps for 30 minutes**
 
 ---
 
-*Movie nights should be fun — deciding on the movie shouldn’t be the hardest part.* 🍿
+## ** The Vision**
+
+**From fragmented chats to seamless movie nights in 5 minutes.**
+
+We believe the best part of movie night should be watching the movie, not deciding what to watch. FlickPick turns coordination from a chore into a fun part of the experience.
+
+---
+
+## ** Future Possibilities**
+- **Smart recommendations** based on group taste profiles
+- **"Movie night recipes"** - save successful theme nights
+- **Watch party integration** with existing streaming services
+- **Mobile apps** for on-the-go planning
+- **Advanced analytics** - "Your group loves 90s sci-fi!"
+
+---
+
+## ** Current Status**
+
+**Active Development** - Core features being implemented
+-  Authentication system
+-  Landing pages & marketing site
+-  Group management foundation
+-  Real-time voting interface
+-  Movie search & suggestion
+-  Post-movie discussion system
+
+---
+
+**Because the hardest part of movie night should be choosing the popcorn flavor, not the movie.** 🍿
