@@ -2,11 +2,11 @@ namespace FlickPickApp.DTOs;
 
 public class ForgotPasswordDto 
 {
-   public string Email { get; set; }
+   public required string Email { get; set; }
 }
 
 public class PasswordResetDto 
 {
-    public string PasswordVerificationToken { get; set; }
-    public string NewPassword { get; set; }
+    public required string PasswordVerificationToken { get; set; }
+    public required string NewPassword { get; set; }
 }

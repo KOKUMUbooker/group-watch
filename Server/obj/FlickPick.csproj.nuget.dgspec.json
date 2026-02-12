@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/home/boookumu/projects/Movie-manager/Server/FlickPick.csproj": {}
+    "/home/booker/projects/Movie-manager/Server/FlickPick.csproj": {}
   },
   "projects": {
-    "/home/boookumu/projects/Movie-manager/Server/FlickPick.csproj": {
+    "/home/booker/projects/Movie-manager/Server/FlickPick.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/boookumu/projects/Movie-manager/Server/FlickPick.csproj",
+        "projectUniqueName": "/home/booker/projects/Movie-manager/Server/FlickPick.csproj",
         "projectName": "FlickPick",
-        "projectPath": "/home/boookumu/projects/Movie-manager/Server/FlickPick.csproj",
-        "packagesPath": "/home/boookumu/.nuget/packages/",
-        "outputPath": "/home/boookumu/projects/Movie-manager/Server/obj/",
+        "projectPath": "/home/booker/projects/Movie-manager/Server/FlickPick.csproj",
+        "packagesPath": "/home/booker/.nuget/packages/",
+        "outputPath": "/home/booker/projects/Movie-manager/Server/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/boookumu/.nuget/NuGet/NuGet.Config"
+          "/home/booker/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -97,7 +97,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/home/boookumu/.dotnet/sdk/8.0.417/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.415/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

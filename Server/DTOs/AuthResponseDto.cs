@@ -11,5 +11,5 @@ public class AuthResult
 {
     public AuthResponseDTO? Data { get; set; }
     public AuthErrorType ErrorType { get; set; } = AuthErrorType.None;
-    public string? ErrorMessage { get; set; }
+    public string ErrorMessage { get; set; } = String.Empty;
 }

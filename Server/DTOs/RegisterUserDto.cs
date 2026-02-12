@@ -5,12 +5,12 @@ namespace FlickPickApp.DTOs;
 public class RegisterUserDto
 {
     [Required]
-    public string FullName { get; set; }
+    public required string FullName { get; set; }
 
     [Required]
     [EmailAddress(ErrorMessage = "Invalid email provided")]
-    public string Email { get; set; }
+    public required string Email { get; set; }
 
     [Required]
-    public string Password {get;set;}
+    public required string Password {get;set;}
 }
