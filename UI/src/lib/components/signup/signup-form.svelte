@@ -51,7 +51,6 @@
 			toast.error(error.message, { richColors: true });
 		}
 	}));
-	console.log("isPending : ",isPending);
 
 	function validatePasswords() {
 		const result = registerSchema.safeParse(formData);
@@ -88,7 +87,6 @@
 		}
 
 		const res =  await mutateAsync(formData);
-		console.log("res : ",res)
 		toast.success(res.message,{richColors:true});
 		goto(`/verify-email?tkn=${res.emailVerificationToken}`);
 	}
