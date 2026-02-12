@@ -1,8 +1,8 @@
-using MovieManager.Models;
+using FlickPickApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace MovieManager.Services;
+namespace FlickPickApp.Services;
 
     public class ClientCacheService : IClientCacheService
     {

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace MovieManager.Models;
+namespace FlickPickApp.Models;
 
 public class Client : EntityBase
 {

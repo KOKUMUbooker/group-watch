@@ -2,10 +2,10 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using MovieManager.Models;
-using MovieManager.Services;
+using FlickPickApp.Models;
+using FlickPickApp.Services;
 
-namespace MovieManager;
+namespace FlickPickApp;
 
 public class Program
 {

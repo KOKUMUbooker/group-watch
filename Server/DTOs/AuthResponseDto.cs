@@ -1,4 +1,4 @@
-namespace MovieManager.DTOs;
+namespace FlickPickApp.DTOs;
 
 public class AuthResponseDTO
 {

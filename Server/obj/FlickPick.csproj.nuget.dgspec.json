@@ -1,15 +1,15 @@
 {
   "format": 1,
   "restore": {
-    "/home/boookumu/projects/Movie-manager/Server/MovieManager.csproj": {}
+    "/home/boookumu/projects/Movie-manager/Server/FlickPick.csproj": {}
   },
   "projects": {
-    "/home/boookumu/projects/Movie-manager/Server/MovieManager.csproj": {
+    "/home/boookumu/projects/Movie-manager/Server/FlickPick.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/boookumu/projects/Movie-manager/Server/MovieManager.csproj",
-        "projectName": "MovieManager",
-        "projectPath": "/home/boookumu/projects/Movie-manager/Server/MovieManager.csproj",
+        "projectUniqueName": "/home/boookumu/projects/Movie-manager/Server/FlickPick.csproj",
+        "projectName": "FlickPick",
+        "projectPath": "/home/boookumu/projects/Movie-manager/Server/FlickPick.csproj",
         "packagesPath": "/home/boookumu/.nuget/packages/",
         "outputPath": "/home/boookumu/projects/Movie-manager/Server/obj/",
         "projectStyle": "PackageReference",

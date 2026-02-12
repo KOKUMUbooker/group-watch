@@ -1,4 +1,4 @@
-namespace MovieManager.Models;
+namespace FlickPickApp.Models;
 
 public class Role : EntityBase 
 {

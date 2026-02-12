@@ -1,4 +1,4 @@
-# Movie Management API
+# FlickPick API
 
 A .NET 8 Web API for managing movies with CRUD operations, PostgreSQL, and Minimal APIs.
 
@@ -34,7 +34,7 @@ cd Movie-manager
 docker compose up -d
 ```
 
-Database: `moviemanager` | User: `admin` | Password: `secret` | Port: `5480`
+Database: `flickpick` | User: `admin` | Password: `secret` | Port: `5480`
 
 3. **Install EF Core tools**
 
@@ -51,7 +51,7 @@ rm -r Migrations/
 If database contained some data first (for local development)
 
 ```bash
-docker exec -it postgres psql -U admin -d moviemanager -c "DROP SCHEMA app CASCADE;
+docker exec -it postgres psql -U admin -d flickpick -c "DROP SCHEMA app CASCADE;
 ```
 
 ```bash
@@ -76,11 +76,6 @@ Once running, explore the API:
 
 ### Endpoints
 
-- `GET /api/movies` - List all movies
-- `GET /api/movies/{id}` - Get specific movie
-- `POST /api/movies` - Create new movie
-- `PUT /api/movies/{id}` - Update movie
-- `DELETE /api/movies/{id}` - Delete movie
 
 ## Development
 
@@ -103,7 +98,7 @@ docker-compose down
 ### Project Structure
 
 ```
-MovieManager/
+FlickPickApp/
 ├── Models/          # Domain entities & DB context
 ├── DTOs/           # Data transfer objects
 ├── Services/       # Business logic
@@ -118,7 +113,7 @@ Connection string in `appsettings.json`:
 
 ```json
   "ConnectionStrings": {
-    "DefaultConnection": "Host=localhost;Port=5480;Database=moviemanager;Username=admin;Password=secret;"
+    "DefaultConnection": "Host=localhost;Port=5480;Database=flickpick;Username=admin;Password=secret;"
   }
 ```
 

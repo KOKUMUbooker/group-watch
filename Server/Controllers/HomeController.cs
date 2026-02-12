@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
-using MovieManager.Services;
+using FlickPickApp.Services;
 
-namespace MovieManager.Controllers;
+namespace FlickPickApp.Controllers;
 
 [ApiController]
 public class HomeController : ControllerBase

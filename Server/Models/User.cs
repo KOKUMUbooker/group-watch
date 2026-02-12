@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace MovieManager.Models;
+namespace FlickPickApp.Models;
 
 public class User : EntityBase
 {

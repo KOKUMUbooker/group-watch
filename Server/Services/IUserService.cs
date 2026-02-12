@@ -1,7 +1,7 @@
-using MovieManager.DTOs;
-using MovieManager.Models;
+using FlickPickApp.DTOs;
+using FlickPickApp.Models;
 
-namespace MovieManager.Services;
+namespace FlickPickApp.Services;
 
 public interface IUserService
 {

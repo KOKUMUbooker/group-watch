@@ -1,11 +1,11 @@
-namespace MovieManager.Services;
+namespace FlickPickApp.Services;
 
 public interface IEmailService
 {
     Task SendEmail(string receptor, string subject, string body);
 }
 
-// namespace MovieManager.Services;
+// namespace FlickPickApp.Services;
 
 // public interface IEmailSender
 // {

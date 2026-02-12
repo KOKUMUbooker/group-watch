@@ -1,5 +1,5 @@
-using MovieManager.Models;
-namespace MovieManager.Services;
+using FlickPickApp.Models;
+namespace FlickPickApp.Services;
 
 public interface IClientCacheService
 {

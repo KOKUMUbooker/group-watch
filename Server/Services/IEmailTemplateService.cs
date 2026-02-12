@@ -1,4 +1,4 @@
-namespace MovieManager.Services;
+namespace FlickPickApp.Services;
 
 public interface IEmailTemplateService
 {

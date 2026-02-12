@@ -1,15 +1,15 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace MovieManager.DTOs;
+namespace FlickPickApp.DTOs;
 
 public class UserLoginDto
 {
     [Required]
     [EmailAddress(ErrorMessage = "Invalid email provided")]
-    public required string Email { get; set; }
+    public string Email { get; set; }
 
     [Required]
-    public required string Password {get;set;}
+    public string Password {get;set;}
 
     [Required(ErrorMessage = "ClientId is required.")]
     public string ClientId { get; set; } = null!;

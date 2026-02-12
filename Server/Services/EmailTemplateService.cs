@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace MovieManager.Services;
+namespace FlickPickApp.Services;
 
 public class EmailTemplateService : IEmailTemplateService
 {

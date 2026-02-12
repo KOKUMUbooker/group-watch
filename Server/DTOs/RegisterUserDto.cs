@@ -1,16 +1,16 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace MovieManager.DTOs;
+namespace FlickPickApp.DTOs;
 
 public class RegisterUserDto
 {
     [Required]
-    public required string FullName { get; set; }
+    public string FullName { get; set; }
 
     [Required]
     [EmailAddress(ErrorMessage = "Invalid email provided")]
-    public required string Email { get; set; }
+    public string Email { get; set; }
 
     [Required]
-    public required string Password {get;set;}
+    public string Password {get;set;}
 }

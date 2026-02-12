@@ -1,10 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
-using MovieManager.Models;
-using MovieManager.DTOs;
+using FlickPickApp.Models;
+using FlickPickApp.DTOs;
 using Microsoft.EntityFrameworkCore;
-using MovieManager.Services;
+using FlickPickApp.Services;
+using System.Security.Cryptography;
+using System.Text;
 
-namespace MovieManager.Controllers;
+
+namespace FlickPickApp.Controllers;
 
 [ApiController]
 [Route("/api/auth/")]
@@ -197,7 +200,7 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> ResetPassword([FromBody] PasswordResetDto dto)
     {
         var hashedToken = Convert.ToBase64String(
-            SHA256.HashData(Encoding.UTF8.GetBytes(dto.Token))
+            SHA256.HashData(Encoding.UTF8.GetBytes(dto.PasswordVerificationToken))
         );
 
         var user = await _context.Users

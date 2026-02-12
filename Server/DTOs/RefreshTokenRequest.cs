@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace MovieManager.DTOs;
+namespace FlickPickApp.DTOs;
 
 public class RefreshTokenRequestDTO
 {
