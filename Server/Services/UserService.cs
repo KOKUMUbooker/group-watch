@@ -52,42 +52,57 @@ public class UserService : IUserService
         return user;
     }
 
-    public async Task<AuthResponseDTO?> AuthenticateUserAsync(UserLoginDto loginDto, string ipAddress)
+    public async Task<AuthResult> AuthenticateUserAsync(UserLoginDto loginDto, string ipAddress)
     {
         var user = await _dbContext.Users
             .Include(u => u.Role)
             .FirstOrDefaultAsync(u => u.Email == loginDto.Email);
 
         if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.PasswordHash))
-            return null; // Invalid credentials
+        {
+            return new AuthResult
+            {
+                ErrorType = AuthErrorType.InvalidCredentials,
+                ErrorMessage = "Invalid credentials."
+            };
+        }
 
         if (!user.EmailVerified)
         {
-            throw new Exception("Email not verified, please login to ");
+            return new AuthResult
+            {
+                ErrorType = AuthErrorType.EmailNotVerified,
+                ErrorMessage = "Email not verified."
+            };
         }
 
         var client = await _clientCacheService.GetClientByClientIdAsync(loginDto.ClientId);
         if (client == null)
         {
-            return null;
+            return new AuthResult
+            {
+                ErrorType = AuthErrorType.InvalidClient,
+                ErrorMessage = "Invalid client."
+            };
         }
 
         var accessToken = _tokenService.GenerateAccessToken(user, user.Role.RoleValue, out string jwtId, client);
-
         var refreshToken = _tokenService.GenerateRefreshToken(ipAddress, jwtId, client, user.Id);
 
         _dbContext.RefreshTokens.Add(refreshToken);
         await _dbContext.SaveChangesAsync();
 
-        var accessTokenExpiryMinutes = int.TryParse(_configuration["JwtSettings:AccessTokenExpirationMinutes"], out var val) ? val : 15;
-
-        return new AuthResponseDTO
+        return new AuthResult
         {
-            AccessToken = accessToken,
-            RefreshToken = refreshToken.Token,
-            AccessTokenExpiresAt = DateTime.UtcNow.AddMinutes(accessTokenExpiryMinutes)
+            Data = new AuthResponseDTO
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken.Token,
+                AccessTokenExpiresAt = DateTime.UtcNow.AddMinutes(15)
+            }
         };
     }
+
     
     // Refreshes an expired access token using a valid refresh token and client ID
     public async Task<AuthResponseDTO?> RefreshTokenAsync(string refreshToken, string clientId, string ipAddress)
