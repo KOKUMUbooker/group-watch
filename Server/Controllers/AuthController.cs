@@ -31,7 +31,10 @@ public class AuthController : ControllerBase
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
         var userExists = await _context.Users.AnyAsync(u => u.Email == userDetails.Email);
-        if (userExists) return BadRequest("Email is already in use.");
+        if (userExists)
+        {
+             return BadRequest("Email is already in use, please log in");
+        }
         
         try
         {
@@ -48,30 +51,37 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(new CustomError{Message = ex.Message});
         }
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login(UserLoginDto loginDto)
     {
-        try
-        {
-            if (!ModelState.IsValid) return BadRequest(ModelState);
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
+        var ipAddress = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
 
-            var authResponse = await _userService.AuthenticateUserAsync(loginDto, ipAddress);
-            
-            // If authentication fails (invalid credentials or client), return 401 Unauthorized
-            if (authResponse == null) return Unauthorized(new { message = "Invalid credentials or client." });
-            
-            return Ok(authResponse);
-        }
-        catch (Exception ex)
+        var result = await _userService.AuthenticateUserAsync(loginDto, ipAddress);
+
+        if (result.ErrorType != AuthErrorType.None)
         {
-            return BadRequest(ex.Message);
+            return result.ErrorType switch
+            {
+                AuthErrorType.InvalidCredentials => Unauthorized(
+                    new CustomError { Error = "INVALID_CREDENTIALS", Message = result.ErrorMessage }),
+
+                AuthErrorType.EmailNotVerified => StatusCode(403,
+                    new CustomError { Error = "EMAIL_NOT_VERIFIED", Message = result.ErrorMessage }),
+
+                AuthErrorType.InvalidClient => Unauthorized(
+                    new CustomError { Error = "INVALID_CLIENT", Message = result.ErrorMessage }),
+
+                _ => BadRequest(new CustomError { Message = "Authentication failed." })
+            };
         }
+
+        return Ok(result.Data);
     }
 
     // Endpoint to obtain a new access token using a refresh token
@@ -87,29 +97,37 @@ public class AuthController : ControllerBase
             var authResponse = await _userService.RefreshTokenAsync(refreshRequest.RefreshToken, refreshRequest.ClientId, ipAddress);
 
             // If refresh token or client is invalid, return 401 Unauthorized
-            if (authResponse == null) return Unauthorized(new { message = "Invalid refresh token or client." });
+            if (authResponse == null) return Unauthorized(new CustomError { Message = "Invalid refresh token or client." });
 
             return Ok(authResponse);
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return BadRequest(new CustomError{Message = ex.Message});
         }
     }
 
     [HttpGet("verify-email")]
     public async Task<IActionResult> VerifyEmail([FromQuery] string token)
     {
-        if (string.IsNullOrEmpty(token)) return BadRequest(new { message = "Token is required." });
+        if (string.IsNullOrEmpty(token)) return BadRequest(new CustomError { Message = "Token is required." });
 
         var user = await _context.Users.FirstOrDefaultAsync(u => u.EmailVerificationToken == token);
         
-        if (user == null) return BadRequest(new { message = "Invalid verification token." });
+        if (user == null) return BadRequest(new CustomError{ Message = "Invalid verification token." });
+
+        // Email already verified
+        if (user.EmailVerified)
+        {
+            return  BadRequest(new CustomError{ 
+                Message = "Email has already been verified, please proceed to login",
+             });
+        }
         
         if (user.EmailVerificationTokenExpiry < DateTime.UtcNow)
-            return BadRequest(new { 
-                message = "Verification link has expired.",
-                code = "TOKEN_EXPIRED"
+            return BadRequest(new CustomError{ 
+                Message = "Verification link has expired.",
+                Error = "TOKEN_EXPIRED"
             });
         
         user.EmailVerified = true;
@@ -119,7 +137,7 @@ public class AuthController : ControllerBase
         
         // return Ok(new { message = "Email verified successfully." });
         string clientUrl = _configuration.GetValue<string>("UIClient:URL") ?? "http://localhost:5173";
-        return Redirect($"{clientUrl}/email-verified");
+        return Redirect($"{clientUrl}/email-verified?email=${user.Email}");
     }
 
     [HttpPost("resend-verification")]
@@ -129,7 +147,7 @@ public class AuthController : ControllerBase
             .FirstOrDefaultAsync(u => u.EmailVerificationToken == dto.Token);
         
         if (user == null)
-            return BadRequest(new { message = "Invalid token." });
+            return BadRequest(new CustomError{ Message = "Invalid token." });
         
         // Generate new token
         user.EmailVerificationToken = _userService.GenerateVerificationToken();
@@ -143,6 +161,6 @@ public class AuthController : ControllerBase
 
         await _emailService.SendEmail(user.Email,"Verify email",htmlBody);
         
-        return Ok(new { message = "Verification email sent." ,emailVerificationToken = user.EmailVerificationToken });
+        return Ok(new { Message = "Verification email sent." ,EmailVerificationToken = user.EmailVerificationToken });
     }
 }
